@@ -109,12 +109,12 @@ public class M2Controller {
 			frame.add(ui1);
 			break;
 		 case 2:
-		 M2Controller con2 = new M2Controller(arr7x7, new Array7(leftC), new
-		 Array7(rightC));
-		 Test2UI ui2 = new Test2UI(con2);
-		 con2.setUi(ui2);
-		 frame.add(ui2);
-		 break;
+			 M2Controller con2 = new M2Controller(arr7x7, new Array7(leftC), new
+					 Array7(rightC));
+			 Test2UI ui2 = new Test2UI(con2);
+			 con2.setUI(ui2);
+			 frame.add(ui2);
+			 break;
 //		 case 3:
 //		 M2Controller con3 = new M2Controller(arr7x7);
 //		 arr7x7.setArray(Chars.getChar('B'));
