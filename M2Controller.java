@@ -1,5 +1,9 @@
 package p6;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -9,7 +13,7 @@ import p6.Array7x7;
 import p6.Test1UI; // Ja?
 
 public class M2Controller {
-
+	
 	private JPanel ui;
 	private Array7x7 array;
 	private Array7 leftColumn;
@@ -25,6 +29,10 @@ public class M2Controller {
 		this.leftColumn = leftColumn;
 		this.rightColumn = rightColumn;
 		this.array = array;
+	}
+
+	public M2Controller(Array7x7[] charArr) { 	// Skal denna konstruktor væra her egentlig?
+		// TODO Auto-generated constructor stub
 	}
 
 	// public void readRow(int rowNbr) {
@@ -108,46 +116,42 @@ public class M2Controller {
 			con1.setUI(ui1);
 			frame.add(ui1);
 			break;
-		 case 2:
-			 M2Controller con2 = new M2Controller(arr7x7, new Array7(leftC), new
-					 Array7(rightC));
-			 Test2UI ui2 = new Test2UI(con2);
-			 con2.setUI(ui2);
-			 frame.add(ui2);
-			 break;
-//		 case 3:
-//		 M2Controller con3 = new M2Controller(arr7x7);
-//		 arr7x7.setArray(Chars.getChar('B'));
-////		 Test3UI ui3 = new Test3UI(con3);
-//		
-		// con3.setUi(ui3);
-		// frame.add(ui3);
-		// break;
-		// case 4:
-		//
-		// String word = JOptionPane.showInputDialog("Skriv ett ord pĺ 5 bokstäver");
-		// while (word.length() != 5) {
-		// word = JOptionPane.showInputDialog("Skriv ett ord pĺ 5 bokstäver");
-		// }
-		// Controller con4 = new Controller(charArr);
-		// con4.setWord(word.toUpperCase());
-		// Test4UI ui4 = new Test4UI(con4);
-		// con4.setUi(ui4);
-		// frame.add(ui4);
-		// final ScheduledExecutorService ses =
-		// Executors.newSingleThreadScheduledExecutor();
-		// ses.scheduleAtFixedRate(new Runnable(){
-		// @Override
-		// public void run() {
-		// ui4.moveLeft();
-		// }
-		//
-		// }, 0, 500, TimeUnit.MILLISECONDS);
-		// break;
-		// case 0:
-		// System.exit(0);
-		// }
+		case 2:
+			M2Controller con2 = new M2Controller(arr7x7, new Array7(leftC), new Array7(rightC));
+			Test2UI ui2 = new Test2UI(con2);
+			con2.setUI(ui2);
+			frame.add(ui2);
+			break;
+		case 3:
+			M2Controller con3 = new M2Controller(arr7x7, new Array7(leftC), new Array7(rightC));
+			arr7x7.setArray(Chars.getChar('B'));
+			Test3UI ui3 = new Test3UI(con3);
 
+			con3.setUI(ui3);
+			frame.add(ui3);
+			break;
+		case 4:
+
+			String word = JOptionPane.showInputDialog("Skriv ett ord på 5 bokstäver");
+			while (word.length() != 5) {
+				word = JOptionPane.showInputDialog("Skriv ett ord på 5 bokstäver");
+			}
+			M2Controller con4 = new M2Controller(charArr);
+			con4.setWord(word.toUpperCase());
+			Test4UI ui4 = new Test4UI(con4);
+			con4.setUi(ui4);
+			frame.add(ui4);
+			final ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
+			ses.scheduleAtFixedRate(new Runnable() {
+				@Override
+				public void run() {
+					ui4.moveLeft("");
+				}
+
+			}, 0, 500, TimeUnit.MILLISECONDS);
+			break;
+		case 0:
+			System.exit(0);
 		}
 
 		frame.pack();
