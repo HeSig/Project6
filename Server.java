@@ -1,5 +1,18 @@
 package chatapp;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+
+import javax.swing.ImageIcon;
+
 public class Server {
 
 	// en unik id for varje connection
@@ -9,7 +22,6 @@ public class Server {
 	// en ArrayList för att hålla reda på lista av Client
 
 	private ArrayList<ClientThread> al;
-
 
 	private ServerGUI sg;
 
@@ -26,9 +38,6 @@ public class Server {
 	private boolean keepGoing;
 
 
-
-
-
 	/*
 		serverns constructor som tar emot porten för att lyssna på anslutning 
 		som parameter i konsolen
@@ -37,7 +46,7 @@ public class Server {
 
 	public Server(int port) {
 
-		this(port, null);
+		this(port);
 
 	}
 
@@ -98,7 +107,7 @@ public class Server {
 
 					break;
 
-				ClientThread t = new ClientThread(socket);  // skapa en tråd av ddet
+				ClientThread t = new ClientThread(socket);  // skapa en tråd av det
 
 				al.add(t);                                  // spara det i en arraylist
 
@@ -145,7 +154,6 @@ public class Server {
 		}
 
 
-
 		catch (IOException e) {
 
 			String msg = sdf.format(new Date()) + " Exception on new ServerSocket: " + e + "\n";
@@ -185,9 +193,9 @@ public class Server {
 
 			System.out.println(time);
 
-		else
-
-			sg.appendEvent(time + "\n");
+//		else
+//
+//			sg.appendEvent(time + "\n");
 
 	}
 
@@ -203,10 +211,10 @@ public class Server {
 		if(sg == null)
 
 			System.out.print(messageLf);
-
-		else
-
-			sg.appendRoom(messageLf);     
+//
+//		else
+//
+//			sg.appendRoom(messageLf);     
 
 
 
@@ -258,6 +266,40 @@ public class Server {
 
 	}
 
+	private class UnsendMessages {
+		private HashMap<User, ArrayList<Message>> unsend = new HasMap<User,ArrayList<Message>>();
+		
+	//	unsend.put(Message);
+		
+		//Egna tillägg
+		
+		public synchronized put(User user, Message message) {
+//			if(al == null) {
+//				al = new ArrayList();
+//				unsend.put(al);
+			}
+			// hämta ArrayList - om null skapa en och placera i unsend
+			//lägga till message i arraylist	
+		}
+		public synchronized ArrayList<Message> get(User user){
+	
+		}
+	}
+	
+	private class User implements Serializable {
+		private String username;
+		private ImageIcon image;
+		
+		//konstruktor, get-metoder,...
+		
+		public int hashCode() {
+			return username.hashCode();
+		}
+		
+		public boolean equals(Object obj) {
+			return username.equals(obj);
+		}
+	}
 
 
 	public static void main(String[] args) {
@@ -266,4 +308,65 @@ public class Server {
 		int portNumber = 1500;
 
 	}
+	
+	Server server = new Server(portNumber);
+	
+	server.start();
 }
+
+class ClientThread extends Thread {
+	
+	Socket socket;
+	
+	ObjectInputStream ois;
+	
+	ObjectOutputStream oos;
+	
+	int id;
+	
+	String userName;
+	
+	ChatMessage cm;
+	
+	String date;
+	
+	ClientThread(Socket socket) {
+		id = ++uniqueId;
+		
+		this.socket = socket;
+		
+		System.out.println("Thread trying to create Object Input/OutputStream");
+	
+		try
+		{
+			
+		
+		oos = new ObjectOutputStream(socket.getOutputStream());
+		
+		ois = new ObjectInputStream(socket.getInputStream());
+		
+		userName = (String) ois.readObject();
+		
+		display(userName + " just connected");
+		
+		} catch (IOException e) {
+			display("Exception creating new Input/output Stream: " + e);
+			
+			return;
+		}
+	}
+		
+		public void run() {
+			
+			boolean keepGoing = true;
+			
+			while(keepGoing) {
+				
+				try {
+					cm = (ChatMessage);
+					ois.readObject(); 
+				}
+			}
+		}
+	}
+
