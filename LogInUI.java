@@ -99,7 +99,7 @@ public class LogInUI extends JPanel implements ActionListener, DocumentListener 
 			String filename = chooser.getSelectedFile().getAbsolutePath();
 			ImageIcon image = new ImageIcon(filename);
 			Image transImage = image.getImage();
-			Image scaledImage = transImage.getScaledInstance(150, 120, Image.SCALE_SMOOTH);		
+			Image scaledImage = transImage.getScaledInstance(150, 150, Image.SCALE_SMOOTH);		
 			image = new ImageIcon(scaledImage);
 			titleimage.setIcon(image);
 			return image;
