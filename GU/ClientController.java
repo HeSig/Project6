@@ -1,10 +1,12 @@
-package Client;
+package GU;
 
 import java.io.IOException;
+
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-public class Controller {
+public class ClientController {
 	private Client client;
 	private ClientUI ui = new ClientUI(this);
 	private void showClientUI() {
@@ -18,27 +20,29 @@ public class Controller {
 			}
 		});
 	}
-	public Controller(Client client) {
+	public ClientController(Client client) {
 		this.client = client;
 		client.setController(this);
 		showClientUI();
 	}
-	public void newSend(String str) {
+	public void newSend(Message msg) {
 		try {
-			client.newSend(str);
-		} catch (IOException e) {}
+			client.newSend(msg);
+		} catch (IOException e) {
+			System.err.println("error i newSend Controller");
+		}
 	}
-	public void newMessageReceived(String response) {
+	public void newMessageReceived(Message msg) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				ui.setMessageReceived(response);
+				ui.setMessageReceived(msg);
 			}
 		});
 	}
 	public static void main(String[] args) {
 		try {
-			 Client client = new Client("127.0.0.1",1214);
-			 new Controller(client);
+			 Client client = new Client("127.0.0.1",1210);
+			 new ClientController(client);
 		} catch (IOException e) {}
 	}
 }

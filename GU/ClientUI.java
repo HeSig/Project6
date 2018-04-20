@@ -1,12 +1,17 @@
-package Client;
+package GU;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,9 +20,9 @@ import javax.swing.JTextArea;
 public class ClientUI extends JPanel implements ActionListener {
     private JButton btnSend = new JButton("Tryck");
     private JTextArea taShowMessage = new JTextArea(""); 
-    private Controller controller;
+    private ClientController controller;
 
-    public ClientUI(Controller controller) {
+    public ClientUI(ClientController controller) {
         this.controller = controller;
         setLayout(new BorderLayout());
         taShowMessage.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -29,12 +34,22 @@ public class ClientUI extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        String send = "test";
-        controller.newSend(send);
+    	Icon image = new ImageIcon("bilder/bildUser.png");
+    	User user = new User("Daniel");
+    	LinkedList<User> list = new LinkedList<User>();
+    	list.add(user);
+    	String name = "Daniel";
+    	String text = "någon text";
+    	
+    	Message msg = new Message(user, list, text, image);
+    	
+    	System.out.println(msg);
+    	
+        controller.newSend(msg);
     }
     
-    public void setMessageReceived(String result) {
-    	taShowMessage.setText(result);
+    public void setMessageReceived(Message msg) {
+    	taShowMessage.setText(msg.toString());
     }
 
     public static void main(String[] args) {

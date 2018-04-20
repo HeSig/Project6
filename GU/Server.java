@@ -1,10 +1,12 @@
-package Client;
+package GU;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import javax.swing.Icon;
 
 /**
  * 
@@ -52,12 +54,13 @@ public class Server {
 			start();
 		}
 		public void run() {
-			String str = "Läggs på tillbaka";
+			Message msg;
 			try {
 				while(true) {
 					try {
-						str = str + (String)ois.readObject();
-						oos.writeObject(str);
+						msg = (Message)ois.readObject();
+						System.out.println(msg);
+						oos.writeObject(msg);
 						oos.flush();
 					} catch (ClassNotFoundException e) {}
 				}
@@ -70,7 +73,7 @@ public class Server {
 		}
 	}
 	public static void main(String[] args) {
-		new Server(1214);
+		new Server(1213);
 	}
 }
 
