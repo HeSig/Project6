@@ -183,9 +183,9 @@ public class Controller {
 		     break;
 		     
 		 case 4:
-				word = JOptionPane.showInputDialog("Skriv ett ord eller mening med minst 5 bokst‰ver");
+				word = JOptionPane.showInputDialog("Skriv ett ord eller mening med minst 5 bokst√§ver");
 				while (word.length() < 5) {
-					word = JOptionPane.showInputDialog("Skriv ett ord eller mening med minst 5 bokst‰ver");
+					word = JOptionPane.showInputDialog("Skriv ett ord eller mening med minst 5 bokst√§ver");
 				}
 				Array7x7[] charArray = new Array7x7[word.length()];
 				for (int i = 0; i < word.length(); i++) {
