@@ -1,6 +1,8 @@
 package gruppuppgift;
 
+import java.awt.Component;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import javax.swing.ImageIcon;
 
@@ -32,10 +34,13 @@ public class Message {
 		this.image = image;
 	}
 	
-	public void addTime(String message) {
+	public String getTime() {
+		String message = "";
 		calendar = Calendar.getInstance();
-		message += "\n" + Calendar.YEAR + " " + Calendar.MONTH + " " + Calendar.DATE + "\n " + 
+		calendar.setTime(new Date());
+		message += Calendar.YEAR + " " + Calendar.MONTH + " " + Calendar.DATE +  
 		Calendar.HOUR_OF_DAY + "." + Calendar.MINUTE;
+		return message;
 	}
 	
 	public void setImage(ImageIcon image) {
@@ -55,12 +60,28 @@ public class Message {
 	}
 	
 	public String setMessage(User user, LinkedList<User> list, String text) {
-		String receivers = "To: ";
+		String message = "";
+		message += getTime() + " Från: " + user.getName() + " Till: ";
+		
+		for(User u: list) {
+			message += u + ", ";
+		}
+		message+= ". " + text;
+		return message;
+		/*String receivers = "To: ";
 		String message = "Message from " + this.user + ": " + this.text + "\n";
 		
 		for(User u : list) {
 			receivers += u + ", ";
 		}
-		return message + receivers;
+		return message + receivers + addTime(message);*/
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public LinkedList<User> getRecievers() {
+		return list;
 	}
 }
