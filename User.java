@@ -1,34 +1,39 @@
-package client;
+package User;
+
+import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 
-public class User{
-	private String name;
-	private ImageIcon image;
-	
-	public User(String name) {
-		setName(name);
-		this.image = null;
+public class User implements Serializable {
+		private String name;
+		private ImageIcon image;
+		
+		public User(String name, ImageIcon image) {
+			this.name = name;
+			this.image = image;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public ImageIcon getImage() {
+			return image;
+		}
+		
+		public void setImage(ImageIcon image) {
+			this.image = image;
+		}
+		
+		public boolean equals(Object obj) {
+			if(obj instanceof User) {
+				return name.equals(((User) obj).getName());
+			}
+			return false;
+		}
 	}
-	public User(String name, ImageIcon image) {
-		setName(name);
-		setImage(image);
-	}
-	
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public ImageIcon getImage() {
-		return image;
-	}
-	public void setImage(ImageIcon image) {
-		this.image = image;
-	}
-	
-	
 
-}
