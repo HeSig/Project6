@@ -3,9 +3,12 @@ package gruppuppgift;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import gruppuppgift.Message;
 
@@ -21,6 +24,7 @@ public class ChatWindow extends JFrame implements ActionListener {
 	private JList<User> userList;
 	private JScrollPane listScroller;
 	private DefaultListModel dlm;
+	private ListSelectionListener listSelectionListener;
 	private JTextField inputText = new JTextField();
 	private JButton sendButton = new JButton("Send");
 	private JButton connectButton = new JButton("Connect");
@@ -46,14 +50,22 @@ public class ChatWindow extends JFrame implements ActionListener {
 		panel1 = new JPanel(layout1);
 		panel2 = new JPanel(layout2);
 		dlm = new DefaultListModel();
+		// ListselectionListener
+		listSelectionListener = new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent listSelectionEvent) {
+				System.out.println(dlm.get(userList.getSelectedIndex()));
+			}
+
+		};
 		userList = new JList(dlm);
-		
-		userList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		userList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		userList.addListSelectionListener(listSelectionListener);
+
+		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		userList.setLayoutOrientation(JList.VERTICAL);
 		userList.setVisibleRowCount(-1);
 		listScroller = new JScrollPane(userList);
-		
-		
 
 		textPane.setPreferredSize(new Dimension(300, 300));
 		listScroller.setPreferredSize(new Dimension(100, 300));
@@ -75,7 +87,7 @@ public class ChatWindow extends JFrame implements ActionListener {
 		this.pack();
 		this.setVisible(true);
 	}
-	
+
 	public void addUserToList(User user) {
 		dlm.addElement(user.getName());
 	}
@@ -85,6 +97,7 @@ public class ChatWindow extends JFrame implements ActionListener {
 	}
 
 	public void sendMessage(String message) {
+		LinkedList<User> list = new LinkedList<User>();
 		Message messageToSend = new Message(getUser(), recieverList, message, image);
 		printMessage(messageToSend);
 	}
@@ -111,6 +124,10 @@ public class ChatWindow extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		ChatWindow chatWindow = new ChatWindow(new User("Henrik"));
+		chatWindow.addUserToList(new User("Pettson"));
+		chatWindow.addUserToList(new User("Findus"));
+		chatWindow.addUserToList(new User("Pettersson"));
+		chatWindow.addUserToList(new User("Musse"));
 	}
 
 }
