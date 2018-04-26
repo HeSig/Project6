@@ -29,6 +29,10 @@ public class User implements Serializable {
 			this.image = image;
 		}
 		
+		public int hashCode() {
+			return name.hashCode();
+		}
+		
 		public boolean equals(Object obj) {
 			if(obj instanceof User) {
 				return name.equals(((User) obj).getName());
