@@ -29,7 +29,7 @@ public class Client extends Thread {
 		this.controller = controller;
 	}
 
-	//skickar iv‰g parametern i writeObject. Kan anropas frÂn Controller
+	//skickar iv√§g parametern i writeObject. Kan anropas fr√•n Controller
 	public void newSend(Message msg) {
 		try {
 			oos.writeObject(msg);
