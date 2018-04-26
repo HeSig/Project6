@@ -1,19 +1,22 @@
 package gruppuppgift;
 
-import java.awt.Component;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
+
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-public class Message {
+public class Message implements Serializable{
 	private User user;
 	private LinkedList<User> list = new LinkedList<User>();
 	private String text;
-	private ImageIcon image;
+	private Icon image;
 	private Calendar calendar;
+	private Date time;
 	
-	public Message(User user, LinkedList<User> list, ImageIcon image) {
+	public Message(User user, LinkedList<User> list, Icon image) {
 		this.user = user;
 		this.list = list;
 		this.image = image;
@@ -24,30 +27,31 @@ public class Message {
 		this.user = user;
 		this.list = list;
 		this.text = text;
-		this.image = null;
+		this.image = new ImageIcon("bilder/bildUser.png");
 	}
 	
-	public Message(User user, LinkedList<User> list, String text, ImageIcon image) {
+	public Message(User user, LinkedList<User> list, String text, Icon image) {
 		this.user = user;
 		this.list = list;
 		this.text = text;
 		this.image = image;
 	}
 	
-	public String getTime() {
-		String message = "";
+	public String toString() {
+		return "(User: " + user + ", UserList: " + list + ", Text: " + text + ", Image: " + image + ")";
+	}
+	
+	public void addTime(String message) {
 		calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		message += Calendar.YEAR + " " + Calendar.MONTH + " " + Calendar.DATE +  
+		message += "\n" + Calendar.YEAR + " " + Calendar.MONTH + " " + Calendar.DATE + "\n " + 
 		Calendar.HOUR_OF_DAY + "." + Calendar.MINUTE;
-		return message;
 	}
 	
 	public void setImage(ImageIcon image) {
 		this.image = image;
 	}
 	
-	public ImageIcon getImage() {
+	public Icon getImage() {
 		return this.image;
 	}
 	
@@ -56,32 +60,24 @@ public class Message {
 	}
 	
 	public String getText() {
-		return setMessage(this.user, this.list, this.text);
+		return this.text;
 	}
 	
 	public String setMessage(User user, LinkedList<User> list, String text) {
-		String message = "";
-		message += getTime() + " Från: " + user.getName() + " Till: ";
-		
-		for(User u: list) {
-			message += u + ", ";
-		}
-		message+= ". " + text;
-		return message;
-		/*String receivers = "To: ";
+		String receivers = "To: ";
 		String message = "Message from " + this.user + ": " + this.text + "\n";
 		
 		for(User u : list) {
 			receivers += u + ", ";
 		}
-		return message + receivers + addTime(message);*/
+		return message + receivers;
 	}
-
+	
+	public LinkedList<User> getRecievers(){
+		return list;
+	}
+	
 	public User getUser() {
 		return user;
-	}
-
-	public LinkedList<User> getRecievers() {
-		return list;
 	}
 }

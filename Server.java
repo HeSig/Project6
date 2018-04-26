@@ -1,372 +1,117 @@
-package chatapp;
+package gruppuppgift;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 
 public class Server {
-
-	// en unik id for varje connection
-
-	private static int uniqueId;
-
-	// en ArrayList för att hålla reda på lista av Client
-
-	private ArrayList<ClientThread> al;
-
-	private ServerGUI sg;
-
-	// tid
-
-	private SimpleDateFormat sdf;
-
-	// portnummer för att lyssna på connection
-
-	private int port;
-
-	// boolean som kommer att stängas av för att stoppa servern
-
-	private boolean keepGoing;
-
-
-	/*
-		serverns constructor som tar emot porten för att lyssna på anslutning 
-		som parameter i konsolen
-
-	 */
-
-	public Server(int port) {
-
-		this(port);
-
-	}
-
-
-
-	public Server(int port, ServerGUI sg) {
-
-
-		this.sg = sg;
-
-		// port
-
-		this.port = port;
-
-		// visa hh:mm:ss
-
-		sdf = new SimpleDateFormat("HH:mm:ss");
-
-		// ArrayList för client list
-
-		al = new ArrayList<ClientThread>();
-
-	}
-
-
-
-	public void start() {
-
-		keepGoing = true;
-
-		// skapa socket server och vänta för connection request
-
-		try
-
-		{
-
-			// socket som används av servern
-
-			ServerSocket serverSocket = new ServerSocket(port);
-
-
-
-			// oändlig loop för att vänta på connection
-
-			while(keepGoing)
-
-			{
-
-				display("Server waiting for Clients on port " + port + ".");
-
-
-
-				Socket socket = serverSocket.accept();      // accept connection 
-
-				// om frågad att sluta
-
-				if(!keepGoing)
-
-					break;
-
-				ClientThread t = new ClientThread(socket);  // skapa en tråd av det
-
-				al.add(t);                                  // spara det i en arraylist
-
-				t.start();
-
-			}
-
-			// om frågad att sluta
-
-			try {
-
-				serverSocket.close();
-
-				for(int i = 0; i < al.size(); ++i) {
-
-					ClientThread tc = al.get(i);
-
-					try {
-
-						tc.sInput.close();
-
-						tc.sOutput.close();
-
-						tc.socket.close();
-
-					}
-
-					catch(IOException ioE) {
-
-
-
-					}
-
-				}
-
-			}
-
-			catch(Exception e) {
-
-				display("Exception closing the server and clients: " + e);
-
-			}
-
-		}
-
-
-		catch (IOException e) {
-
-			String msg = sdf.format(new Date()) + " Exception on new ServerSocket: " + e + "\n";
-
-			display(msg);
-
-		}
-
-	}      
-
-
-	protected void stop() {
-
-		keepGoing = false;
-
-
-
-		try {
-
-			new Socket("localhost", port);
-
-		}
-
-		catch(Exception e) {
-
-
-
-		}
-
-	}
-
-	private void display(String msg) {
-
-		String time = sdf.format(new Date()) + " " + msg;
-
-		if(sg == null)
-
-			System.out.println(time);
-
-//		else
-//
-//			sg.appendEvent(time + "\n");
-
-	}
-
-
-	private synchronized void broadcast(String message) {
-
-
-		String time = sdf.format(new Date());
-
-		String messageLf = time + " " + message + "\n";
-
-
-		if(sg == null)
-
-			System.out.print(messageLf);
-//
-//		else
-//
-//			sg.appendRoom(messageLf);     
-
-
-
-		//vi slår i omvänd ordning om vi skulle behöva ta bort en klient
-
-		// eftersom den har kopplats bort
-
-		for(int i = al.size(); --i >= 0;) {
-
-			ClientThread ct = al.get(i);
-
-			// försök skriva till Client om den misslyckas ta bort den från listan
-
-			if(!ct.writeMsg(messageLf)) {
-
-				al.remove(i);
-
-				display("Disconnected Client " + ct.username + " removed from list.");
-
-			}
-
-		}
-
-	}
-
-
-
-	// logout
-
-	synchronized void remove(int id) {
-
-		// skannar arraylist tills vi hittar id
-
-		for(int i = 0; i < al.size(); ++i) {
-
-			ClientThread ct = al.get(i);
-
-			// hittade id
-
-			if(ct.id == id) {
-
-				al.remove(i);
-
-				return;
-
-			}
-
-		}
-
-	}
-
-	private class UnsendMessages {
-		private HashMap<User, ArrayList<Message>> unsend = new HasMap<User,ArrayList<Message>>();
-		
-	//	unsend.put(Message);
-		
-		//Egna tillägg
-		
-		public synchronized put(User user, Message message) {
-//			if(al == null) {
-//				al = new ArrayList();
-//				unsend.put(al);
-			}
-			// hämta ArrayList - om null skapa en och placera i unsend
-			//lägga till message i arraylist	
-		}
-		public synchronized ArrayList<Message> get(User user){
 	
-		}
+	private HashMap<String, ClientHandler> clientMap = new HashMap<String, ClientHandler>();
+	private ServerUI serverUI;
+	
+	public Server(int port, ServerUI serverUI) {
+		new Connection(port, this).start();
+		this.serverUI = serverUI;
 	}
 	
-	private class User implements Serializable {
-		private String username;
-		private ImageIcon image;
-		
-		//konstruktor, get-metoder,...
-		
-		public int hashCode() {
-			return username.hashCode();
+	private class Connection extends Thread {
+		private int port;
+		private Server server;
+		public Connection(int port, Server server) {
+			this.port = port;
+			this.server = server;
 		}
-		
-		public boolean equals(Object obj) {
-			return username.equals(obj);
-		}
-	}
-
-
-	public static void main(String[] args) {
-		// start server på port 1500
-
-		int portNumber = 1500;
-
-	}
-	
-	Server server = new Server(portNumber);
-	
-	server.start();
-}
-
-class ClientThread extends Thread {
-	
-	Socket socket;
-	
-	ObjectInputStream ois;
-	
-	ObjectOutputStream oos;
-	
-	int id;
-	
-	String userName;
-	
-	ChatMessage cm;
-	
-	String date;
-	
-	ClientThread(Socket socket) {
-		id = ++uniqueId;
-		
-		this.socket = socket;
-		
-		System.out.println("Thread trying to create Object Input/OutputStream");
-	
-		try
-		{
-			
-		
-		oos = new ObjectOutputStream(socket.getOutputStream());
-		
-		ois = new ObjectInputStream(socket.getInputStream());
-		
-		userName = (String) ois.readObject();
-		
-		display(userName + " just connected");
-		
-		} catch (IOException e) {
-			display("Exception creating new Input/output Stream: " + e);
-			
-			return;
-		}
-	}
-		
 		public void run() {
-			
-			boolean keepGoing = true;
-			
-			while(keepGoing) {
-				
-				try {
-					cm = (ChatMessage);
-					ois.readObject(); 
+			Socket socket = null;
+			System.out.println("Server startad");
+			serverUI.addLog("On the go");
+			try (ServerSocket serverSocket = new ServerSocket(port)) {
+				while(true) {
+					try {
+						socket = serverSocket.accept();
+						ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+						ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+						String username = (String)ois.readObject();
+						System.out.println(username);
+						serverUI.addLog(username);
+						
+						clientMap.put(username, new ClientHandler(socket, ois, oos, server, username));
+						
+						sendOnlineClients();
+						
+					} catch(IOException e){
+						System.err.println(e);
+						if(socket!=null)
+							socket.close();
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+			} catch(IOException e) {
+				System.err.println(e);
 			}
+			System.out.println("Server stoppad");
+			serverUI.addLog("Off the line");
 		}
 	}
+	
+	public void clientDisconnected(ClientHandler ch) {
+		System.out.println(ch.getUsername() + " disconnected");
+		clientMap.remove(ch.getUsername(), ch);
+		ch = null;
+		sendOnlineClients();
+	}
+	
+	public void sendOnlineClients() {
+		ArrayList<String> usernameList = new ArrayList<String>();
+		for(Entry<String, ClientHandler> entry : clientMap.entrySet()) {
+			usernameList.add(entry.getValue().getUsername());
+		}
+		
+		for(Entry<String, ClientHandler> entry : clientMap.entrySet()) {
+			entry.getValue().sendOnlineList(usernameList);
+		}
+	}
+	
+	private ArrayList<Message> msgList = new ArrayList<Message>();
+	
+	public void WriteMessage(String filename, Message msg) throws IOException{
+		try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))){
+			oos.writeInt(msgList.size());
+			for(Message m: msgList) {
+				oos.writeObject(m);
+			}
+			oos.flush();
+		}
+	}
+
+	public void ReadMessage(String filename) throws IOException{
+		try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename))) ) {
+			Message msg;
+			int n = ois.readInt();
+			try {
+				for(int i = 0; i < n; i++) {
+					msg = (Message)ois.readObject();
+					System.out.println(msg);
+				}
+			} catch(ClassNotFoundException e) {}
+		}
+	}
+
+//	public static void main(String[] args) {
+//		new Server(1226);
+//	}
+}
 
