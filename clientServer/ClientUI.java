@@ -39,7 +39,7 @@ public class ClientUI extends JPanel implements ActionListener {
     	LinkedList<User> list = new LinkedList<User>();
     	list.add(user);
     	String name = "Daniel";
-    	String text = "någon text";
+    	String text = "nÃ¥gon text";
     	
     	Message msg = new Message(user, list, text);
     	
