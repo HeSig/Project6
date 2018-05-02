@@ -1,6 +1,10 @@
-package gruppuppgift;
+package danielsVersionOändrad;
 
+import java.awt.Component;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -10,44 +14,64 @@ import javax.swing.ImageIcon;
 
 public class Message implements Serializable{
 	private User user;
-	private LinkedList<User> list = new LinkedList<User>();
+	private ArrayList<User> receivers = new ArrayList<User>();
 	private String text;
 	private Icon image;
-	private Calendar calendar;
-	private Date time;
+	private Date serverReceivedDate;
+	private Date MessageDeliveredDate;
 	
-	public Message(User user, LinkedList<User> list, Icon image) {
+	public Message(User user, ArrayList<User> receivers, Icon image) {
 		this.user = user;
-		this.list = list;
+		this.receivers = receivers;
 		this.image = image;
 		this.text = null;
 	}
 	
-	public Message(User user, LinkedList<User> list, String text) {
+	public Message(User user, ArrayList<User> receivers, String text) {
 		this.user = user;
-		this.list = list;
+		this.receivers = receivers;
 		this.text = text;
-		this.image = new ImageIcon("bilder/bildUser.png");
+		this.image = null;
 	}
 	
-	public Message(User user, LinkedList<User> list, String text, Icon image) {
+	public Message(User user, ArrayList<User> receivers, String text, Icon image) {
 		this.user = user;
-		this.list = list;
+		this.receivers = receivers;
 		this.text = text;
 		this.image = image;
 	}
 	
 	public String toString() {
-		return "(User: " + user + ", UserList: " + list + ", Text: " + text + ", Image: " + image + ")";
+		return "(User: " + user + "), \n(UserList: " + receivers + "), \n(Text: " + text + "), \n(Image: " + image + ")";
 	}
 	
-	public void addTime(String message) {
-		calendar = Calendar.getInstance();
-		message += "\n" + Calendar.YEAR + " " + Calendar.MONTH + " " + Calendar.DATE + "\n " + 
-		Calendar.HOUR_OF_DAY + "." + Calendar.MINUTE;
+	public void setServerReceivedDate() {
+		serverReceivedDate = new Date();
 	}
 	
-	public void setImage(ImageIcon image) {
+//	public String getServerReceivedDate() {
+//		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//		String message = "";
+//		message = sdf.format(MessageDeliveredDate);
+//		return message;
+//	}
+	
+	public Date getServerReceivedDate() {
+		return serverReceivedDate;
+	}
+	
+	public void setMessageDeliveredDate() {
+		MessageDeliveredDate = new Date();
+	}
+	
+	public String getMessageDeliveredDate() {
+		DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		String message = "";
+		message = sdf.format(MessageDeliveredDate);
+		return message;
+	}
+	
+	public void setImage(Icon image) {
 		this.image = image;
 	}
 	
@@ -60,24 +84,22 @@ public class Message implements Serializable{
 	}
 	
 	public String getText() {
-		return this.text;
+		return text;
 	}
 	
-	public String setMessage(User user, LinkedList<User> list, String text) {
-		String receivers = "To: ";
-		String message = "Message from " + this.user + ": " + this.text + "\n";
-		
-		for(User u : list) {
-			receivers += u + ", ";
-		}
-		return message + receivers;
+	public void setUser(User user) {
+		this.user = user;
 	}
-	
-	public LinkedList<User> getRecievers(){
-		return list;
-	}
-	
+
 	public User getUser() {
 		return user;
+	}
+
+	public void setReceivers(ArrayList<User> receivers){
+		this.receivers = receivers;
+	}
+	
+	public ArrayList<User> getReceivers() {
+		return receivers;
 	}
 }
