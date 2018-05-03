@@ -100,7 +100,7 @@ public class ClientUI extends JPanel implements ActionListener {
 		if(e.getSource() == btnSend) {
 			
 			if(taReceivers.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Du måste fylla i mottagare");
+				JOptionPane.showMessageDialog(null, "Du mÃ¥ste fylla i mottagare");
 				
 			}else {
 				Icon image = new ImageIcon("bilder/enBild.png");
