@@ -111,7 +111,7 @@ public class ClientHandler extends Thread{
 			msg.setMessageDeliveredDate();
 			oos.writeObject(msg);
 			oos.flush();
-			System.out.println("flushar från savedmessages ch");
+			System.out.println("flushar frÃ¥n savedmessages ch");
 		}catch(IOException e) {}
 	}
 
