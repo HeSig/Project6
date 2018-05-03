@@ -52,7 +52,7 @@ public class Client {
 		
 		new Listener().start();
 		
-		//Skickar anv‰ndaren n‰r klienten startar
+		//Skickar anv√§ndaren n√§r klienten startar
 		this.user = user;
 		sendUserInformation(user);
 
@@ -87,7 +87,7 @@ public class Client {
 		oos.flush();
 	}
 
-	//skickar iv‰g parametern i writeObject. Kan anropas frÂn Controller
+	//skickar iv√§g parametern i writeObject. Kan anropas fr√•n Controller
 	public void newSend(Message msg) throws IOException {
 		oos.writeObject(msg);
 		oos.flush();
